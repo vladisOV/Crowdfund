@@ -1,8 +1,19 @@
 const path = require("path");
-const fs = require("fs");
 const solc = require("solc");
+const fs = require("fs-extra");
+
+const buildPath = path.resolve(__dirname, "build");
+fs.removeSync(buildPath);
 
 const crowdfundPath = path.resolve(__dirname, "contracts", "Crowdfund.sol");
 const source = fs.readFileSync(crowdfundPath, "utf8");
+const output = solc.compile(source, 1).contracts;
 
-module.exports = solc.compile(source, 1).contracts[":Crowdfund"];
+fs.ensureDirSync(buildPath);
+
+for (let contract in output) {
+  fs.outputJsonSync(
+    path.resolve(buildPath, contract.replace(":", "") + ".json"),
+    output[contract]
+  );
+}
