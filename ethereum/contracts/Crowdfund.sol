@@ -1,5 +1,18 @@
 pragma solidity ^0.4.17;
 
+contract CrowdfundFactory {
+    address[] public deployedCrowdfunds;
+
+    function createCrowdfund(uint minimum) public  {
+      address newCrowdfund = new Crowdfund(minimum, msg.sender);
+      deployedCrowdfunds.push(newCrowdfund);
+    }
+
+    function getDeployedCrowdfunds() public view returns(address[]) {
+      return deployedCrowdfunds;
+    }
+}
+
 contract Crowdfund {
     struct Request {
         string description;
@@ -21,8 +34,8 @@ contract Crowdfund {
         _;
     }
 
-    function Crowdfund(uint minimum) public {
-        manager = msg.sender;
+    function Crowdfund(uint minimum, address creator) public {
+        manager = creator;
         minimumContribution = minimum;
     }
 
