@@ -4,17 +4,30 @@ const Web3 = require("web3");
 const provider = ganache.provider();
 const web3 = new Web3(provider);
 
-const { interface, bytecode } = require("../compile.js");
+const compiledFactory = require("../ethereum/build/CrowdfundFactory.json");
+const compiledCrowdfund = require("../ethereum/build/Crowdfund.json");
 
-let crowdfund;
+let factory;
 let accounts;
+let crowdfund;
+let crowdfundAddress;
 
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
-  crowdfund = await new web3.eth.Contract(JSON.parse(interface))
-    .deploy({ data: bytecode, arguments: ["1"] })
+  factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
+    .deploy({ data: compiledFactory.bytecode, arguments: ["1"] })
     .send({ from: accounts[0], gas: "1000000" });
-  crowdfund.setProvider(provider);
+  factory.setProvider(provider);
+  await factory.methods.createCrowdfund("100").send({
+    from: accounts[0],
+    gas: "1000000"
+  });
+  //get first element and assign to crowdfundAddress
+  [crowdfundAddress] = await factory.methods.getDeployedCrowdfunds().call();
+  crowdfund = await new web3.eth.Contract(
+    JSON.parse(compiledCrowdfund.interface),
+    crowdfundAddress
+  );
 });
 
 describe("Crowdfund contract", () => {
