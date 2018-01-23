@@ -29,6 +29,7 @@ contract Crowdfund {
     function contribute() public payable {
         require(msg.value > minimumContribution);
         approvers[msg.sender] = true;
+        approversCount++;
     }
 
     function createRequest(string description, uint value, address recipient) public restricted {
