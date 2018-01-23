@@ -56,7 +56,7 @@ contract Crowdfund {
         Request storage request = requests[index];
         require(!request.complete);
         require(approversCount / 2 < request.approvalCount);
-        request.recipient.transfer(msg.value);
+        request.recipient.transfer(request.value);
         request.complete = true;
     }
 }
