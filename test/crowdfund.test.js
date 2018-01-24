@@ -33,6 +33,11 @@ beforeEach(async () => {
 describe("Crowdfund contract", () => {
   it("deploys a contract", () => {
     assert.ok(crowdfund.options.address);
+    assert.ok(factory.options.address);
+  });
+  it("marks caller as the camp manager", async () => {
+    const manager = await crowdfund.methods.manager().call();
+    assert.equal(accounts[0], manager);
   });
   it("can contribute", async () => {
     const contributorAddress = accounts[1];
@@ -45,11 +50,20 @@ describe("Crowdfund contract", () => {
     });
     const approverExists = await crowdfund.methods
       .approvers(contributorAddress)
-      .call({
-        from: accounts[0]
-      });
+      .call();
     assert.equal(1, count);
-    assert.equal(true, approverExists);
+    assert(approverExists);
+  });
+  it("requires min contribution", async () => {
+    try {
+      await crowdfund.methods.contribute().send({
+        value: "5",
+        from: accounts[1]
+      });
+      assert(false);
+    } catch (err) {
+      assert(err);
+    }
   });
   it("creating request", async () => {
     await crowdfund.methods.createRequest("some desc", 1, accounts[1]).send({
@@ -98,6 +112,10 @@ describe("Crowdfund contract", () => {
       from: accounts[0]
     });
     const request = await crowdfund.methods.requests(0).call();
+    let balance = await web3.eth.getBalance(recipientAddress);
+    balance = web3.utils.fromWei(balance, "ether");
+    balance = parseFloat(balance);
+    assert(balance > 99);
     assert.equal(true, request.complete);
   });
 });
