@@ -1,13 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import factory from "../ethereum/factory";
 
 class CrowdfundIndex extends Component {
   async componentDidMount() {
-    const crowdfunds = await factory
-      .methods()
-      .getDeployedCrowdfunds()
-      .call();
-    console.log(crowdfund);
+    const crowdfunds = await factory.methods.getDeployedCrowdfunds().call();
+    console.log(crowdfunds);
   }
 
   render() {
