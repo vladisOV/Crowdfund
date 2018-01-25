@@ -1,14 +1,27 @@
 import React, { Component } from "react";
 import factory from "../ethereum/factory";
+import { Card } from "semantic-ui-react";
 
 class CrowdfundIndex extends Component {
-  async componentDidMount() {
+  //nextjs class function
+  static async getInitialProps() {
     const crowdfunds = await factory.methods.getDeployedCrowdfunds().call();
-    console.log(crowdfunds);
+    return { crowdfunds };
+  }
+
+  renderCrowdfunds() {
+    const items = this.props.crowdfunds.map(address => {
+      return {
+        header: address,
+        description: <a />,
+        fluid: true
+      };
+    });
+    return <Card.Group items={items} />;
   }
 
   render() {
-    return <div>lalala</div>;
+    return <div>{this.renderCrowdfunds()}</div>;
   }
 }
 
