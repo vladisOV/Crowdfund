@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import factory from "../ethereum/factory";
-import { Card } from "semantic-ui-react";
+import { Card, Button } from "semantic-ui-react";
+import Layout from "../components/Layout";
 
 class CrowdfundIndex extends Component {
   //nextjs class function
@@ -13,7 +14,7 @@ class CrowdfundIndex extends Component {
     const items = this.props.crowdfunds.map(address => {
       return {
         header: address,
-        description: <a />,
+        description: <a>View Info</a>,
         fluid: true
       };
     });
@@ -21,7 +22,19 @@ class CrowdfundIndex extends Component {
   }
 
   render() {
-    return <div>{this.renderCrowdfunds()}</div>;
+    return (
+      <Layout>
+        <div>
+          <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"
+          />
+          <h3>Open crowdfunding campaigns</h3>
+          {this.renderCrowdfunds()}
+          <Button content="Create Campaign" icon="add circle" primary={true} />
+        </div>
+      </Layout>
+    );
   }
 }
 
