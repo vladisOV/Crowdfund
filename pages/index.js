@@ -25,10 +25,6 @@ class CrowdfundIndex extends Component {
     return (
       <Layout>
         <div>
-          <link
-            rel="stylesheet"
-            href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"
-          />
           <h3>Open crowdfunding campaigns</h3>
           <Button
             floated="right"
