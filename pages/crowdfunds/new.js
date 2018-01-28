@@ -7,12 +7,14 @@ import web3 from "../../ethereum/web3";
 class CrowdfundNew extends Component {
   state = {
     minimumContribution: "",
-    errorMessage: ""
+    errorMessage: "",
+    loading: false
   };
 
   onSubmit = async event => {
     event.preventDefault();
     try {
+      this.setState({ loading: true, errorMessage: "" });
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCrowdfund(this.state.minimumContribution)
@@ -21,7 +23,9 @@ class CrowdfundNew extends Component {
         });
     } catch (err) {
       this.setState({ errorMessage: err.message });
+      console.log(err);
     }
+    this.setState({ loading: false });
   };
 
   render() {
@@ -41,7 +45,9 @@ class CrowdfundNew extends Component {
             />
           </Form.Field>
           <Message error header="Oops!" content={this.state.errorMessage} />
-          <Button primary>Create!</Button>
+          <Button loading={this.state.loading} primary>
+            Create!
+          </Button>
         </Form>
       </Layout>
     );
