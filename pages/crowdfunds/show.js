@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
 import Crowdfund from "../../ethereum/crowdfund";
+import { Card } from "semantic-ui-react";
+import web3 from "../../ethereum/web3";
 
 class CrowdfundShow extends Component {
   static async getInitialProps(props) {
@@ -15,10 +17,56 @@ class CrowdfundShow extends Component {
     };
   }
 
+  renderCards() {
+    const {
+      balance,
+      manager,
+      minimumContribution,
+      requestsCount,
+      approversCount
+    } = this.props;
+
+    const items = [
+      {
+        header: manager,
+        meta: "Address of manager",
+        description:
+          "Manager created this campaign and can withdraw money & create requests.",
+        style: { overflowWrap: "break-word" }
+      },
+      {
+        header: minimumContribution,
+        meta: "Minimum contribution",
+        description:
+          "You must contribute at least this much wei to become an approver."
+      },
+      {
+        header: requestsCount,
+        meta: "Number of requests",
+        description:
+          "A requests tries to withdraw money from the contract. Must be approved."
+      },
+      {
+        header: approversCount,
+        meta: "Number of approvers",
+        description:
+          "Number of people who have already donated to the contract."
+      },
+      {
+        header: web3.utils.fromWei(balance, "ether"),
+        meta: "Campaign balance (ether)",
+        description: "The balance is how much money campaign has left to spend"
+      }
+    ];
+
+    return <Card.Group items={items} />;
+  }
+
   render() {
     return (
       <Layout>
-        <h3>asd</h3>
+        <h3>Campaign details</h3>
+        {this.renderCards()}
       </Layout>
     );
   }
