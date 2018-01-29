@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
 import Crowdfund from "../../ethereum/crowdfund";
-import { Card } from "semantic-ui-react";
+import { Card, Grid } from "semantic-ui-react";
 import web3 from "../../ethereum/web3";
+import ContributeForm from "../../components/ContributeForm";
 
 class CrowdfundShow extends Component {
   static async getInitialProps(props) {
     const crowdfund = Crowdfund(props.query.address);
     const summary = await crowdfund.methods.getSummary().call();
     return {
+      address: props.query.address,
       minimumContribution: summary[0],
       balance: summary[1],
       requestsCount: summary[2],
@@ -66,7 +68,12 @@ class CrowdfundShow extends Component {
     return (
       <Layout>
         <h3>Campaign details</h3>
-        {this.renderCards()}
+        <Grid>
+          <Grid.Column width={10}>{this.renderCards()}</Grid.Column>
+          <Grid.Column width={6}>
+            <ContributeForm address={this.props.address} />
+          </Grid.Column>
+        </Grid>
       </Layout>
     );
   }
