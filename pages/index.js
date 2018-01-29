@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import factory from "../ethereum/factory";
 import { Card, Button } from "semantic-ui-react";
 import Layout from "../components/Layout";
+import { Link } from "../routes";
 
 class CrowdfundIndex extends Component {
   //nextjs class function
@@ -14,7 +15,11 @@ class CrowdfundIndex extends Component {
     const items = this.props.crowdfunds.map(address => {
       return {
         header: address,
-        description: <a>View Info</a>,
+        description: (
+          <Link route={`/crowdfunds/${address}`}>
+            <a>View Info</a>
+          </Link>
+        ),
         fluid: true
       };
     });
@@ -26,12 +31,17 @@ class CrowdfundIndex extends Component {
       <Layout>
         <div>
           <h3>Open crowdfunding campaigns</h3>
-          <Button
-            floated="right"
-            content="Create Campaign"
-            icon="add circle"
-            primary={true}
-          />
+          <Link route="/crowdfunds/new">
+            <a>
+              <Button
+                floated="right"
+                content="Create Campaign"
+                icon="add circle"
+                primary={true}
+              />
+            </a>
+          </Link>
+
           {this.renderCrowdfunds()}
         </div>
       </Layout>
