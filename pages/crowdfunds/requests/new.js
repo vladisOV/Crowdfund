@@ -31,7 +31,7 @@ class RequestNew extends Component {
         .send({
           from: accounts[0]
         });
-      Router.pushRoute(`/crowdfuns/${this.props.addres}/requests`);
+      Router.pushRoute(`/crowdfuns/${this.props.address}/requests`);
     } catch (err) {
       this.setState({ errorMessage: err.message });
     }
